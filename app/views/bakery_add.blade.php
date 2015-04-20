@@ -13,15 +13,17 @@
     		</div>
     	</div>
     </div>     
+    {{Form::open(['url' => '/main/'.$id.'/search_item','method'=>'get'])}}   
     <div class="row">
     	<div class="col-md-2">
-           <input class="form-control"  size="16"  value="" type="text" id="txtsearch" name="txtsearch">
+           <input class="form-control"  size="16"  value="" type="text" id="search" name="search">
     	</div>
     	<div class="col-md-2">
-    		<button class="btn btn-sm btn-info" type="submit">Search</button>
-    		<button class="btn btn-sm btn-success" data-toggle="modal" data-target=".bs-example-modal-sm" type="submit">ADD</button>
+    		<button class="btn btn-sm btn-info btn-search-item" type="submit">Search</button>
+    		<button class="btn btn-sm btn-success btn-setAdd" data-toggle="modal" data-target=".bs-example-modal-sm" type="submit">ADD</button>
 		</div>		
     </div>  
+    {{Form::close()}}
     {{Form::open(['url' => '/main/save'])}}   
 	<table class="table table-hover" id="tbl-date">
 		<thead>
@@ -36,14 +38,14 @@
 		</thead>
 		<tbody>
 			@foreach ($result as $row)
-				<tr class="bred-item-{{$row->id}}" data-bread-id="{{$row->id}}">
-			   	   <td class="bread-name"><a href="{{URL::to('/main/'.$row->id)}}">{{$row->bread_name}}</a></td>
+				<tr class="bred-item-{{$row->bID}}" data-bread-id="{{$row->bID}}">
+			   	   <td class="bread-name"><a href="{{URL::to('/main/'.$row->bID)}}">{{$row->bread_name}}</a></td>
 				   <td class=""><input class="form-control"  size="16"  value="{{$row->QUANTITY}}" type="text" id="txtquat" name="txtquat"></td>
 				   <td class=""><input class="form-control"  size="16"  value="{{$row->IN}}" type="text" id="txtIn" name="txtIn"></td>
 				   <td class=""><input class="form-control"  size="16"  value="{{$row->OUT}}" type="text" id="txtOut" name="txtOut"></td>
 				   <td class=""><input class="form-control"  size="16"  value="{{$row->PRICE}}" type="text" id="txtprice" name="txtprice"></td>
 				   <td>
-				   		<button class="btn btn-sm btn-info" data-toggle="modal" data-target=".bs-example-modal-sm" type="submit">Edit</button>
+				   		<button class="btn btn-sm btn-info btn_edit" data-toggle="modal" data-target=".bs-example-modal-sm" >Edit</button>
 				   		<button class="btn btn-sm btn-danger" type="submit">Delete</button>
 				   </td>
 				</tr>
@@ -53,35 +55,19 @@
 	<div class="row">
 		<div class="col-md-12">
 			{{Form::submit('SAVE',array('class' => 'btn btn-md btn-primary'))}}
+			<input value="{{URL::to('/')}}" type="hidden" id="url" name="url">
 		</div>
 	</div>
 	{{ Form::close() }}
 	<div class="row">
 			<div class="paginate">
-				<nav>
-				  <ul class="pagination">
-				    <li>
-				      <a href="#" aria-label="Previous">
-				        <span aria-hidden="true">&laquo;</span>
-				      </a>
-				    </li>
-				    <li><a href="#">1</a></li>
-				    <li><a href="#">2</a></li>
-				    <li><a href="#">3</a></li>
-				    <li><a href="#">4</a></li>
-				    <li><a href="#">5</a></li>
-				    <li>
-				      <a href="#" aria-label="Next">
-				        <span aria-hidden="true">&raquo;</span>
-				      </a>
-				    </li>
-				  </ul>
-				</nav>
+				{{$result->links();}}
 			</div>
 	</div>
 <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm">
-    {{Form::open(['url' => '/main/add_item','id'=> 'authAdd'])}}   
+    {{Form::open(['url' => '','id'=> 'authAdd'])}}
+    {{ Form::hidden('hid', $id, array('id' => 'hid')) }}   
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

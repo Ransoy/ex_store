@@ -4,16 +4,19 @@ var modifyType = 0;
 var baseurl = $('#url').val();
 var id = 0; 
 var className;
+var itId = $('#hid').val();
 
 $('#dp3').datepicker();
 $('#dp4').datepicker();
 	
-$('.btn-setAdd').on('click',function(){
+$('.btn-setAdd').on('click',function(e){
 	modifyType = 1;
 	$('#modifyType').val(modifyType);
 });
 
-$(document).on('click','.btn_edit',function(){
+$(document).on('click','.btn_edit',function(e){
+	e.preventDefault();
+	e.stopPropagation();
 	modifyType = 2;
 	id = $(this).closest('tr').data('item-id');
 	className = '.class-item-'+id+' .date_name a';
@@ -47,11 +50,13 @@ $('.btn_ok').on('click',function(){
 			datatype: 'json',
 			success:function(data){
 				
-				if(data != 'false'){
+				if(data.success != false){
 					$(className).html(dataval);
 					modifyType = 0;
 					$('.close').click();
 					$('#dateNow').val('');
+				}else{
+					alert(data.errors);
 				}
 		
 			}
@@ -61,22 +66,47 @@ $('.btn_ok').on('click',function(){
 });
 
 $('.btn-ok-add').on('click',function(){
-	$.ajax({
-		url:baseurl+'/main/add_item',
-		type:'post',
-		data:data,
-		datatype:'json',
-		success:function(data){
-			
-			if(data != 'false'){
-				$('#tbl-date tbody').append(data);
-				modifyType = 0;
-				$('.close').click();
-				$('#dateNow').val('');
+	var formData = $('#authAdd').serialize();
+	//console.log(JSON.stringify(formData));
+	if(modifyType == 1){
+		$.ajax({
+			url:baseurl+'/main/'+itId+'/add_item',
+			type:'post',
+			data:formData,
+			datatype:'json',
+			success:function(data){
+				
+				if(data.success != false){
+					$('#tbl-date tbody').append(data);
+					modifyType = 0;
+					$('.close').click();
+					$('#dateNow').val('');
+				}else{
+					alert(data.errors);
+				}
+				
 			}
-			
-		}
-	});
+		});
+	}else{
+		$.ajax({
+			url:baseurl+'/main/'+itId+'/edit_item',
+			type:'post',
+			data:formData,
+			datatype:'json',
+			success:function(data){
+				
+				if(data.success != false){
+					$('#tbl-date tbody').append(data);
+					modifyType = 0;
+					$('.close').click();
+					$('#dateNow').val('');
+				}else{
+					alert(data.errors);
+				}
+				
+			}
+		});
+	}	
 });
 
 $(document).on('click','.btn_delete',function(){
@@ -115,5 +145,21 @@ $('.btn_search').on('click',function(){
 	
 	
 });
+
+/*$('.btn-search-item').on('click',function(){
+	var dateSeach = $('#txtsearch').val();
+	var htmlStr;
+	$.ajax({
+		url:baseurl+'/main/'+itId+'/search_item',
+		type:'post',
+		data:{'searchStr':dateSeach},
+		success:function(data){
+			$('#tbl-date tbody').html('');
+			$('#tbl-date tbody').html(data);
+		}    
+	});
+	
+	
+});*/
 
 });

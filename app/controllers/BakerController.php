@@ -74,16 +74,27 @@ class BakerController extends BaseController {
 		$result = $this->baker
 				 		->join('bakery_item_detail', 'bakery_list.id', '=', 'bakery_item_detail.id')
 				 		->where('bakery_list.id', '=', $id)
-						->get();
+				 		->paginate(5);
 	/* 	print_r(DB::getQueryLog()); */
 		if($result->first()){
 			
 			$this->itemID = $id;
-			
-			return View::make('bakery_add')->with(array('result' => $result,'datename'=>$result[0]->date_now));
+
+			return View::make('bakery_add')
+							->with(array(
+									'result' => $result,
+									'datename' => $result[0]->date_now,
+									'id' => $id
+									
+							));
 		}else{
 			
-			return View::make('bakery_add')->with(array('result' => $result,'datename'=>''));
+			return View::make('bakery_add')
+							->with(array(
+									'result' => $result,
+									'datename'=>'',
+									'id' => $id
+							));
 		}
 		
 	}
@@ -91,10 +102,23 @@ class BakerController extends BaseController {
 	public function edit(){
 		
 		$data = Input::all();
-		if(Request::ajax()){
-			$this->baker->where('id',$data['id'])->update(array(
-					'date_now' => $data['dateNow']
+		
+		if(!$this->baker->isValid($data)){
+			
+			return Response::json(array(
+					'success' => false,
+					'errors' => $this->baker->errors->first('dateNow')
 			));
+			
+		}else{
+			
+			if(Request::ajax()){
+				
+				$this->baker->where('id',$data['id'])->update(array(
+						'date_now' => $data['dateNow']
+				));
+			}
+		
 		}
 		
 	}
@@ -105,6 +129,7 @@ class BakerController extends BaseController {
 		if(Request::ajax()){
 			$this->baker->where('id',$data['id'])->delete();
 		}
+		
 	}
 	
 	public function search(){
@@ -112,13 +137,15 @@ class BakerController extends BaseController {
 		$data = Input::all();
 		if(Request::ajax()){
 			
-			$result = $this->baker->where('date_now', 'like' ,'%'.$data['dateNow'].'%')->get();
+			$result = $this->baker
+							->where('date_now', 'like' ,'%'.$data['dateNow'].'%')
+							->get();
 
 			if($result->first()){
 				foreach ($result as $row){
 					$html .= "<tr class='class-item-{$row->id}' data-item-id='{$row->id}'>
 							   <td class='date_name'><a href='/main/{$row->id}'>{$row->date_now}</a></td>
-							   <td class=''>300</td>
+							   <td class=''>0</td>
 							   <td>
 							   		<button class='btn btn-sm btn-info btn_edit' data-toggle='modal' data-target='.bs-example-modal-sm' type='submit'>Edit</button>
 							   		<button class='btn btn-sm btn-danger btn_delete' type='submit'>Delete</button>
@@ -143,29 +170,30 @@ class BakerController extends BaseController {
 			
 			if(Request::ajax()){
 				
-				$id = $this->itemId;
+				$id = $data['hid'];
 				
 				$result = $this->bakerDetail
-									->where('bread_name', '=', $data['bread_name'])
+									->where('bread_name', '=', $data['txtbrdname'])
 									->where('id', '=', $id)
 									->get();
-				if($result->first()){
+				
+				if(!$result->first()){
 					
 					$row = $this->bakerDetail->insertGetId(array(
 								'id' => $id,
-								'bread_name' => $data['bread_name'],
-								'QUANTITY' => $data['QUANTITY'],
-								'IN' => $data['IN'],
-								'OUT' => $data['OUT'],
-								'PRICE' => $data['PRICE'],
+								'bread_name' => $data['txtbrdname'],
+								'QUANTITY' => $data['txtquat'],
+								'IN' => $data['txtIn'],
+								'OUT' => $data['txtOut'],
+								'PRICE' => $data['txtprice'],
 					));
 					
-					return "<tr class='bred-item-{{$row->id}}' data-bread-id='{{$row->id}}'>
-				   	   <td class='bread-name'><a href='{{URL::to('/main/'.$row->id)}}'>{{$row->bread_name}}</a></td>
-					   <td class=''><input class='form-control'  size='16'  value='{{$row->QUANTITY}}' type='text' id='txtquat' name='txtquat'></td>
-					   <td class=''><input class='form-control'  size='16'  value='{{$row->IN}}' type='text' id='txtIn' name='txtIn'></td>
-					   <td class=''><input class='form-control'  size='16'  value='{{$row->OUT}}' type='text' id='txtOut' name='txtOut'></td>
-					   <td class=''><input class='form-control'  size='16'  value='{{$row->PRICE}}' type='text' id='txtprice' name='txtprice'></td>
+					return "<tr class='bred-item-{$row}' data-bread-id='{$row}'>
+				   	   <td class='bread-name'><a href='{{URL::to('/main/'.$row)}}'>{$data['txtbrdname']}</a></td>
+					   <td class=''><input class='form-control'  size='16'  value='{$data['txtquat']}' type='text' id='txtquat' name='txtquat'></td>
+					   <td class=''><input class='form-control'  size='16'  value='{$data['txtIn']}' type='text' id='txtIn' name='txtIn'></td>
+					   <td class=''><input class='form-control'  size='16'  value='{$data['txtOut']}' type='text' id='txtOut' name='txtOut'></td>
+					   <td class=''><input class='form-control'  size='16'  value='{$data['txtprice']}' type='text' id='txtprice' name='txtprice'></td>
 					   <td>
 					   		<button class='btn btn-sm btn-info' data-toggle='modal' data-target='.bs-example-modal-sm' type='submit'>Edit</button>
 					   		<button class='btn btn-sm btn-danger' type='submit'>Delete</button>
@@ -183,6 +211,51 @@ class BakerController extends BaseController {
 			}
 		}
 		
+	}
+	
+	public function edit_item(){
+		
+		$data = Input::all();
+		
+		if(!$this->bakerDetail->isValid($data)){
+			if(Request::ajax()){
+					$this->bakerDetail
+									->where('id',$data['hid'])
+									->update(array(
+											'id' => $id,
+											'bread_name' => $data['txtbrdname'],
+											'QUANTITY' => $data['txtquat'],
+											'IN' => $data['txtIn'],
+											'OUT' => $data['txtOut'],
+											'PRICE' => $data['txtprice'],
+						));
+			}
+		}else{
+			return Response::json(array(
+					'success' => false,
+					'errors' => $this->bakerDetail->errors->first()
+			));
+		}
+	}
+	
+	public function delete_item(){
+		
+		$data = Input::all();
+		if(Request::ajax()){
+			$this->bakerDetail->where('id',$data['hid'])->delete();
+		}
+		
+	}
+	
+	public function search_item($id,$search){
+
+		$result = $this->bakerDetail
+					->where('bread_name', 'like','%'.$search.'%')
+					->pagination(5);
+		if($result->first()){
+			return View::make('bakery_add');
+		}
+			
 	}
 	
 	public function save(){
