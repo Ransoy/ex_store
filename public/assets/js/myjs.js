@@ -60,6 +60,25 @@ $('.btn_ok').on('click',function(){
 
 });
 
+$('.btn-ok-add').on('click',function(){
+	$.ajax({
+		url:baseurl+'/main/add_item',
+		type:'post',
+		data:data,
+		datatype:'json',
+		success:function(data){
+			
+			if(data != 'false'){
+				$('#tbl-date tbody').append(data);
+				modifyType = 0;
+				$('.close').click();
+				$('#dateNow').val('');
+			}
+			
+		}
+	});
+});
+
 $(document).on('click','.btn_delete',function(){
 	var dataval = $('#dateNow').val();
 	var id = $(this).closest('tr').data('item-id');

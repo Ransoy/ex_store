@@ -55,6 +55,7 @@
 			{{Form::submit('SAVE',array('class' => 'btn btn-md btn-primary'))}}
 		</div>
 	</div>
+	{{ Form::close() }}
 	<div class="row">
 			<div class="paginate">
 				<nav>
@@ -80,6 +81,7 @@
 	</div>
 <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm">
+    {{Form::open(['url' => '/main/add_item','id'=> 'authAdd'])}}   
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -107,6 +109,7 @@
         <button type="button" class="btn btn-primary btn-ok-add">Ok</button>
       </div>
     </div><!-- /.modal-content -->
+    {{ Form::close() }}
   </div>
 </div>
 @stop

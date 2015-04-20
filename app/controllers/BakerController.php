@@ -14,7 +14,12 @@ class BakerController extends BaseController {
 	}
 	
 	public function index(){
-		
+				
+		if (!Auth::check()){
+			return Redirect::to('/');
+		}
+	
+		$id = Session::get('id');
 		$result = $this->baker->paginate(5);
 		
 		return View::make('bakery_main')->with('result', $result);
@@ -65,16 +70,20 @@ class BakerController extends BaseController {
 	}
 	
 	public function detail($id){
+		
 		$result = $this->baker
 				 		->join('bakery_item_detail', 'bakery_list.id', '=', 'bakery_item_detail.id')
 				 		->where('bakery_list.id', '=', $id)
 						->get();
 	/* 	print_r(DB::getQueryLog()); */
-		if($result){
+		if($result->first()){
 			
 			$this->itemID = $id;
 			
 			return View::make('bakery_add')->with(array('result' => $result,'datename'=>$result[0]->date_now));
+		}else{
+			
+			return View::make('bakery_add')->with(array('result' => $result,'datename'=>''));
 		}
 		
 	}
@@ -102,9 +111,10 @@ class BakerController extends BaseController {
 		$html = '';
 		$data = Input::all();
 		if(Request::ajax()){
+			
 			$result = $this->baker->where('date_now', 'like' ,'%'.$data['dateNow'].'%')->get();
 
-			if($result){
+			if($result->first()){
 				foreach ($result as $row){
 					$html .= "<tr class='class-item-{$row->id}' data-item-id='{$row->id}'>
 							   <td class='date_name'><a href='/main/{$row->id}'>{$row->date_now}</a></td>
@@ -139,7 +149,7 @@ class BakerController extends BaseController {
 									->where('bread_name', '=', $data['bread_name'])
 									->where('id', '=', $id)
 									->get();
-				if($result){
+				if($result->first()){
 					
 					$row = $this->bakerDetail->insertGetId(array(
 								'id' => $id,

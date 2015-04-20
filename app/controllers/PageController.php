@@ -22,7 +22,7 @@ class PageController extends BaseController{
 	}
 	
 	public function logout(){
-		
+		Session::flush();
 		return View::make('index');
 		
 	}
@@ -51,7 +51,10 @@ class PageController extends BaseController{
 			);
 			
 			if(Auth::attempt($userdate)){
-				Session::put('username', $username);
+				
+				$data = $this->user->where('username', '=', $username)->first();
+				Session::put('id', $data->id);
+				
 				return Redirect::to('/main');
 				
 			}else{
