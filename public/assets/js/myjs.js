@@ -67,27 +67,37 @@ $('.btn_ok').on('click',function(){
 
 });
 
-$('.btn-edit-item').on('click',function(){
+$('.btn-ok-add').on('click',function(){
 	var formData = $('#authAdd').serialize();
-	//console.log(JSON.stringify(formData));
-	$.ajax({
-		url:baseurl+'/main/'+itId+'/edit_item',
-		type:'post',
-		data:formData,
-		datatype:'json',
-		success:function(data){
-			
-			if(data.success != false){
-				$('#tbl-date tbody').append(data);
-				modifyType = 0;
-				$('.close').click();
-				$('#dateNow').val('');
-			}else{
-				alert(data.errors);
+	console.log(id);
+	if(modifyType == 1){
+		$('#authAdd').submit();
+	}else{
+		
+		className = '.class-item-'+id+' tr';
+		console.log(className);
+		$.ajax({
+			url:baseurl+'/main/'+itId+'/edit_item',
+			type:'post',
+			data:formData+'&id='+id,
+			datatype:'json',
+			success:function(data){
+				
+				if(data.success != false){
+					console.log(data.errors);
+					$(className).html('');
+					$(className).append(data.errors);
+					modifyType = 0;
+					$('.close').click();
+					$('#dateNow').val('');
+				}else{
+					alert(data.errors);
+				}
+				
 			}
-			
-		}
-	});
+		});
+	}
+	
 });
 
 $(document).on('click','.btn_delete',function(){
@@ -99,6 +109,27 @@ $(document).on('click','.btn_delete',function(){
 			url:baseurl+'/delete',
 			type:'post',
 			data:{'id':id},
+			success:function(data){
+				
+				if(data != 'false'){
+					$('.class-item-'+id).remove();
+				}
+		
+			}
+		});
+	}
+	
+});
+
+$(document).on('click','.btn-del-item',function(e){
+	e.preventDefault();
+	var id = $(this).closest('tr').data('item-id');
+	
+	if(confirm('do you want to delete?')){
+		$.ajax({
+			url:baseurl+'/main/'+itId+'/delete_item',
+			type:'post',
+			data:{'bid':id},
 			success:function(data){
 				
 				if(data != 'false'){

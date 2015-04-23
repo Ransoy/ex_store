@@ -149,27 +149,27 @@ class BakerController extends BaseController {
 								->where('id', '=', $id)
 								->get();
 			
-			if(!$result->first()){
-				
-				$row = $this->bakerDetail->insertGetId(array(
-							'id' => $id,
-							'bread_name' => $data['txtbrdname'],
-							'QUANTITY' => $data['txtquat'],
-							'IN' => $data['txtIn'],
-							'OUT' => $data['txtOut'],
-							'PRICE' => $data['txtprice'],
-				));
-				
-				return Redirect::to('/main/'.$id);
-				
-			}else{
-				
-				return Response::json(array(
-						'success' => false,
-						'errors' => 'Item already exists'
-				));
-				
-			}
+				if(!$result->first()){
+					
+					$row = $this->bakerDetail->insertGetId(array(
+								'id' => $id,
+								'bread_name' => $data['txtbrdname'],
+								'QUANTITY' => $data['txtquat'],
+								'IN' => $data['txtIn'],
+								'OUT' => $data['txtOut'],
+								'PRICE' => $data['txtprice'],
+					));
+					
+					return Redirect::to('/main/'.$id);
+					
+				}else{
+					
+					return Response::json(array(
+							'success' => false,
+							'errors' => 'Item already exists'
+					));
+					
+				}
 			}
 		
 	}
@@ -177,20 +177,33 @@ class BakerController extends BaseController {
 	public function edit_item(){
 		
 		$data = Input::all();
-		
 		if(!$this->bakerDetail->isValid($data)){
 			if(Request::ajax()){
-					$this->bakerDetail
-									->where('id',$data['hid'])
+					$result = $this->bakerDetail
+									->where('bID',$data['id'])
 									->update(array(
-											'id' => $id,
 											'bread_name' => $data['txtbrdname'],
 											'QUANTITY' => $data['txtquat'],
 											'IN' => $data['txtIn'],
 											'OUT' => $data['txtOut'],
 											'PRICE' => $data['txtprice'],
 						));
+									
+						$html = "<td class='bread-name'><a href=''>{$data['txtbrdname']}</a></td>
+								   <td class=''><input class='form-control'  size='16'  value='{$data['txtquat']}' type='text' id='txtquat' name='txtquat'></td>
+								   <td class=''><input class='form-control'  size='16'  value='{$data['txtIn']}' type='text' id='txtIn' name='txtIn'></td>
+								   <td class=''><input class='form-control'  size='16'  value='{$data['txtOut']}' type='text' id='txtOut' name='txtOut'></td>
+								   <td class=''><input class='form-control'  size='16'  value='{$data['txtprice']}' type='text' id='txtprice' name='txtprice'></td>
+								   <td>
+								   		<button class='btn btn-sm btn-info btn_edit' data-toggle='modal' data-target='.bs-example-modal-sm' >Edit</button>
+								   		<button class='btn btn-sm btn-danger btn-del-item' type='submit'>Delete</button>
+								   </td>";			
 			}
+			
+			return Response::json(array(
+					'success' => true,
+					'errors' => $html
+			));
 		}else{
 			return Response::json(array(
 					'success' => false,
@@ -203,7 +216,7 @@ class BakerController extends BaseController {
 		
 		$data = Input::all();
 		if(Request::ajax()){
-			$this->bakerDetail->where('id',$data['hid'])->delete();
+			$this->bakerDetail->where('bID',$data['bid'])->delete();
 		}
 		
 	}

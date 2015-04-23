@@ -38,7 +38,7 @@
 		</thead>
 		<tbody>
 			@foreach ($result as $row)
-				<tr class="bred-item-{{$row->bID}}" data-bread-id="{{$row->bID}}">
+				<tr class="class-item-{{$row->bID}}" data-item-id="{{$row->bID}}">
 			   	   <td class="bread-name"><a href="{{URL::to('/main/'.$row->bID)}}">{{$row->bread_name}}</a></td>
 				   <td class=""><input class="form-control"  size="16"  value="{{$row->QUANTITY}}" type="text" id="txtquat" name="txtquat"></td>
 				   <td class=""><input class="form-control"  size="16"  value="{{$row->IN}}" type="text" id="txtIn" name="txtIn"></td>
@@ -46,7 +46,7 @@
 				   <td class=""><input class="form-control"  size="16"  value="{{$row->PRICE}}" type="text" id="txtprice" name="txtprice"></td>
 				   <td>
 				   		<button class="btn btn-sm btn-info btn_edit" data-toggle="modal" data-target=".bs-example-modal-sm" >Edit</button>
-				   		<button class="btn btn-sm btn-danger" type="submit">Delete</button>
+				   		<button class="btn btn-sm btn-danger btn-del-item" type="submit">Delete</button>
 				   </td>
 				</tr>
 			@endforeach
@@ -92,7 +92,8 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        {{Form::submit('SAVE',array('class' => 'btn btn-md btn-primary'));}}
+         <button type="button" class="btn btn-default btn-primary btn-ok-add" data-dismiss="modal">SAVE</button>
+      
       </div>
     </div><!-- /.modal-content -->
     {{ Form::close() }}
