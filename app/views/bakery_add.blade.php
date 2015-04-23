@@ -13,7 +13,7 @@
     		</div>
     	</div>
     </div>     
-    {{Form::open(['url' => '/main/'.$id.'/search_item','method'=>'get'])}}   
+    {{Form::open(['url' => '/main/'.$id.'/','method'=>'get'])}}   
     <div class="row">
     	<div class="col-md-2">
            <input class="form-control"  size="16"  value="" type="text" id="search" name="search">
@@ -66,7 +66,7 @@
 	</div>
 <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm">
-    {{Form::open(['url' => '','id'=> 'authAdd'])}}
+    {{Form::open(['url' => '/main/'.$id.'/add_item','id'=> 'authAdd'])}}
     {{ Form::hidden('hid', $id, array('id' => 'hid')) }}   
     <div class="modal-content">
       <div class="modal-header">
@@ -92,7 +92,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary btn-ok-add">Ok</button>
+        {{Form::submit('SAVE',array('class' => 'btn btn-md btn-primary'));}}
       </div>
     </div><!-- /.modal-content -->
     {{ Form::close() }}

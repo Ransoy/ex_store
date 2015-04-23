@@ -10,6 +10,8 @@ $('#dp3').datepicker();
 $('#dp4').datepicker();
 	
 $('.btn-setAdd').on('click',function(e){
+	e.preventDefault();
+
 	modifyType = 1;
 	$('#modifyType').val(modifyType);
 });
@@ -65,48 +67,27 @@ $('.btn_ok').on('click',function(){
 
 });
 
-$('.btn-ok-add').on('click',function(){
+$('.btn-edit-item').on('click',function(){
 	var formData = $('#authAdd').serialize();
 	//console.log(JSON.stringify(formData));
-	if(modifyType == 1){
-		$.ajax({
-			url:baseurl+'/main/'+itId+'/add_item',
-			type:'post',
-			data:formData,
-			datatype:'json',
-			success:function(data){
-				
-				if(data.success != false){
-					$('#tbl-date tbody').append(data);
-					modifyType = 0;
-					$('.close').click();
-					$('#dateNow').val('');
-				}else{
-					alert(data.errors);
-				}
-				
+	$.ajax({
+		url:baseurl+'/main/'+itId+'/edit_item',
+		type:'post',
+		data:formData,
+		datatype:'json',
+		success:function(data){
+			
+			if(data.success != false){
+				$('#tbl-date tbody').append(data);
+				modifyType = 0;
+				$('.close').click();
+				$('#dateNow').val('');
+			}else{
+				alert(data.errors);
 			}
-		});
-	}else{
-		$.ajax({
-			url:baseurl+'/main/'+itId+'/edit_item',
-			type:'post',
-			data:formData,
-			datatype:'json',
-			success:function(data){
-				
-				if(data.success != false){
-					$('#tbl-date tbody').append(data);
-					modifyType = 0;
-					$('.close').click();
-					$('#dateNow').val('');
-				}else{
-					alert(data.errors);
-				}
-				
-			}
-		});
-	}	
+			
+		}
+	});
 });
 
 $(document).on('click','.btn_delete',function(){
