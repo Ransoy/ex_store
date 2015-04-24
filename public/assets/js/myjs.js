@@ -74,7 +74,7 @@ $('.btn-ok-add').on('click',function(){
 		$('#authAdd').submit();
 	}else{
 		
-		className = '.class-item-'+id+' tr';
+		className = '.class-item-'+id;
 		console.log(className);
 		$.ajax({
 			url:baseurl+'/main/'+itId+'/edit_item',

@@ -8,7 +8,8 @@ class BreadAddTableSeeder extends Seeder{
 		DB::table('bakery_item_detail')->delete();
 		DB::table('bakery_item_detail')->insert(array(
 			'id' => 1,
-			'brand_name' => 'pandesal',
+			'bID' => 1,
+			'bread_name' => 'pandesal',
 			'QUANTITY' => 30,
 			'IN' => 20,
 			'OUT' => 10,

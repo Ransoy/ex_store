@@ -29,3 +29,5 @@ Route::post('/main/{id?}/edit_item','BakerController@edit_item');
 Route::post('/main/{id?}/delete_item','BakerController@delete_item');
 //Route::get('/main/{id?search?}','BakerController@search_item');
 Route::get('/main/save','BakerController@save');
+
+Route::get('/store','StoreController@index');

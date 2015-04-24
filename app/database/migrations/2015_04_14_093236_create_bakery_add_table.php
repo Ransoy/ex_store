@@ -15,7 +15,9 @@ class CreateBakeryAddTable extends Migration {
 		Schema::create('bakery_item_detail', function(Blueprint $table)
 		{
 			$table->integer('id');
-			$table->string('brand_name',200);
+			$table->integer('bID');
+			$table->string('bread_name',200);
+			$table->integer('QUANTITY');
 			$table->integer('IN');
 			$table->integer('OUT');
 			$table->integer('PRICE');
