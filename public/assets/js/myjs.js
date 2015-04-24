@@ -69,13 +69,10 @@ $('.btn_ok').on('click',function(){
 
 $('.btn-ok-add').on('click',function(){
 	var formData = $('#authAdd').serialize();
-	console.log(id);
 	if(modifyType == 1){
 		$('#authAdd').submit();
 	}else{
-		
 		className = '.class-item-'+id;
-		console.log(className);
 		$.ajax({
 			url:baseurl+'/main/'+itId+'/edit_item',
 			type:'post',
@@ -84,9 +81,8 @@ $('.btn-ok-add').on('click',function(){
 			success:function(data){
 				
 				if(data.success != false){
-					console.log(data.errors);
 					$(className).html('');
-					$(className).append(data.errors);
+					$(className).html(data.errors);
 					modifyType = 0;
 					$('.close').click();
 					$('#dateNow').val('');
@@ -158,13 +154,16 @@ $('.btn_search').on('click',function(){
 	
 });
 
-/*$('.btn-search-item').on('click',function(){
+
+
+
+$('.btn_store-search').on('click',function(){
 	var dateSeach = $('#txtsearch').val();
 	var htmlStr;
 	$.ajax({
-		url:baseurl+'/main/'+itId+'/search_item',
+		url:baseurl+'/store/search',
 		type:'post',
-		data:{'searchStr':dateSeach},
+		data:{'dateNow':dateSeach},
 		success:function(data){
 			$('#tbl-date tbody').html('');
 			$('#tbl-date tbody').html(data);
@@ -172,6 +171,33 @@ $('.btn_search').on('click',function(){
 	});
 	
 	
-});*/
+});
+
+$('.btn-store-add').on('click', function(e){
+	e.preventDefault();
+	var dateId = $('#txtdate').val();
+	if(modifyType == 1){
+		$('#form-store').submit();
+	}else{
+		className = '.class-item-'+id;
+		$.ajax({
+			url:baseurl+'/store/edit_item',
+			type:'post',
+			data:{'datenow':dateId},
+			success:function(data){
+				
+				if(!data.success){
+					$(className).html(data.errors);
+					modifyType = 0;
+					$('.close').click();
+					$('#dateNow').val('');
+				}else{
+					alert(data.errors);
+				}
+				
+			}
+		});
+	}
+});
 
 });
