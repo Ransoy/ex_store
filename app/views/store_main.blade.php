@@ -4,6 +4,7 @@
     <div class="row">
     	<div class="col-md-2">
             <div class="input-group date" id="dp3" data-date="12-02-2012" data-date-format="mm/dd/yyyy">
+           	  <input value="{{URL::to('/')}}" type="hidden" id="url" name="url">
 			  <input class="form-control"  size="16"  value="" type="text" id="birth" name="birth">
 			  <div class="input-group-addon"> <span class="add-on"><i class="glyphicon glyphicon-calendar"></i></span></div>
 			</div>
@@ -24,7 +25,7 @@
 		<tbody>
 			@foreach ($result as $row)
 			<tr class="class-item-{{$row->id}}" data-item-id="{{$row->id}}">
-			  <td class="store-name"><a href="{{URL::to('/store/'.$row->id)}}">{{$row->date_now}}</a></td>
+			  <td class="date_name"><a href="{{URL::to('/store/'.$row->id)}}">{{$row->date_now}}</a></td>
 			   <td class="">{{$row->total}}</td>
 			   <td>
 			   		<button class="btn btn-sm btn-info btn_edit" data-toggle="modal" data-target=".bs-example-modal-sm" type="submit">Edit</button>
@@ -48,8 +49,8 @@
         <h4 class="modal-title">MODIFY DATA</h4>
       </div>
       <div class="modal-body">
-        <div class="input-group date" id="dp3" data-date="12-02-2012" data-date-format="mm/dd/yyyy">
-		  <input class="form-control"  size="16"  value="" type="text" id="txtdate" name="txtdate">
+        <div class="input-group date" id="dp5" data-date="12-02-2012" data-date-format="yyyy-mm-dd">
+		  <input class="form-control"  size="16"  value="" type="text" id="dateNow" name="dateNow">
 		  <div class="input-group-addon"> <span class="add-on"><i class="glyphicon glyphicon-calendar"></i></span></div>
 		</div>
       </div>

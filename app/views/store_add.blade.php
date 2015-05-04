@@ -25,33 +25,17 @@
 			</tr>
 		</thead>
 		<tbody>
+		@foreach ($result as $row)
 			<tr class="">
-			   <td class=""><a href="">Coke</a></td>
-			   <td class=""><input class="form-control"  size="16"  value="2" type="text" id="txtquat" name="txtquat"></td>
-			   <td class=""><input class="form-control"  size="16"  value="50.00" type="text" id="txtprice" name="txtprice"></td>
+			   <td class=""><a href="">{{$row->brand_name}}</a></td>
+			   <td class=""><input class="form-control"  size="16"  value="{{$row->Quantity}}" type="text" id="txtquat" name="txtquat"></td>
+			   <td class=""><input class="form-control"  size="16"  value="{{$row->Price}}" type="text" id="txtprice" name="txtprice"></td>
 			   <td>
 			   		<button class="btn btn-sm btn-info" data-toggle="modal" data-target=".bs-example-modal-sm" type="submit">Edit</button>
 			   		<button class="btn btn-sm btn-danger" type="submit">Delete</button>
 			   </td>
 			</tr>
-			<tr class="">
-			   <td class=""><a href="">Nova</a></td>
-			   <td class=""><input class="form-control"  size="16"  value="2" type="text" id="txtquat" name="txtquat"></td>
-			   <td class=""><input class="form-control"  size="16"  value="50.00" type="text" id="txtprice" name="txtprice"></td>
-			   <td>
-			   		<button class="btn btn-sm btn-info" data-toggle="modal" data-target=".bs-example-modal-sm" type="submit">Edit</button>
-			   		<button class="btn btn-sm btn-danger" type="submit">Delete</button>
-			   </td>
-			</tr>
-			<tr class="">
-			   <td class=""><a href="">Pampers</a></td>
-			   <td class=""><input class="form-control"  size="16"  value="2" type="text" id="txtquat" name="txtquat"></td>
-			   <td class=""><input class="form-control"  size="16"  value="50.00" type="text" id="txtprice" name="txtprice"></td>
-			   <td>
-			   		<button class="btn btn-sm btn-info"  data-toggle="modal" data-target=".bs-example-modal-sm"type="submit">Edit</button>
-			   		<button class="btn btn-sm btn-danger" type="submit">Delete</button>
-			   </td>
-			</tr>
+		@endforeach	
 		</tbody>	
 	</table>
 		<div class="row">

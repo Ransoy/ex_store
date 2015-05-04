@@ -8,6 +8,7 @@ var itId = $('#hid').val();
 
 $('#dp3').datepicker();
 $('#dp4').datepicker();
+$('#dp5').datepicker();
 	
 $('.btn-setAdd').on('click',function(e){
 	e.preventDefault();
@@ -96,6 +97,34 @@ $('.btn-ok-add').on('click',function(){
 	
 });
 
+$('.btn-store-ok').on('click', function(){
+	var formData = $('#form-store').serialize();
+	if(modifyType == 1){
+		$('#form-store').submit();
+	}else{
+		className = '.class-item-'+id;
+		$.ajax({
+			url:baseurl+'/main/'+itId+'/edit_item',
+			type:'post',
+			data:formData+'&id='+id,
+			datatype:'json',
+			success:function(data){
+				
+				if(data.success != false){
+					$(className).html('');
+					$(className).html(data.errors);
+					modifyType = 0;
+					$('.close').click();
+					$('#dateNow').val('');
+				}else{
+					alert(data.errors);
+				}
+				
+			}
+		});
+	}
+});
+
 $(document).on('click','.btn_delete',function(){
 	var dataval = $('#dateNow').val();
 	var id = $(this).closest('tr').data('item-id');
@@ -137,6 +166,28 @@ $(document).on('click','.btn-del-item',function(e){
 	}
 	
 });
+
+$(document).on('click','.btn-store-delete',function(e){
+	e.preventDefault();
+	var id = $(this).closest('tr').data('item-id');
+	
+	if(confirm('do you want to delete?')){
+		$.ajax({
+			url:baseurl+'/store/delete',
+			type:'post',
+			data:{'id':id},
+			success:function(data){
+				
+				if(data != 'false'){
+					$('.class-item-'+id).remove();
+				}
+		
+			}
+		});
+	}
+	
+});
+
 	
 $('.btn_search').on('click',function(){
 	var dateSeach = $('#txtsearch').val();

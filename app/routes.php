@@ -36,3 +36,4 @@ Route::get('/main/save','BakerController@save');
 Route::get('/store','StoreController@index');
 Route::get('/store/{id?}','StoreController@detail');
 Route::post('/store/add','StoreController@add');
+Route::post('/store/delete','StoreController@delete');
